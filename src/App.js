@@ -5,7 +5,6 @@ import Subject from "./Subject";
 import Labs from "./Labs";
 import About from "./About";
 import Roles from "./Roles";
-import Upload from "./Upload";
 import SignIn from "./SignIn";
 import AppWriteUpload from "./AppWriteUpload";
 import LatestUploads from "./LatestUploads";
@@ -50,7 +49,6 @@ function App() {
             <Route path="/soon" element={<LatestUploads />} />
             <Route path="/roles" element={<Roles />} />
             <Route path="/login" element={<SignIn />} />
-            <Route path="/proto" element={<AppWriteUpload />} />
             <Route path="/lg" element={<LatestUploads />} />
             <Route
               path="/upload"
@@ -60,7 +58,7 @@ function App() {
                     loading ? (
                       <div>Loading...</div>
                     ) : user ? (
-                      <Upload />
+                      <AppWriteUpload />
                     ) : (
                       <Navigate to="/login" />
                     )
