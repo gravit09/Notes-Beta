@@ -145,7 +145,7 @@ const Login = () => {
             </a>
           </div>
           <div className="inline-flex items-center ml-4 px-3 py-2 font-medium text-center bg-blue-700 rounded-lg">
-            <Link to="/" className="logout-button ml-5">
+            <Link to="/" className="logout-button ">
               Home
             </Link>
           </div>

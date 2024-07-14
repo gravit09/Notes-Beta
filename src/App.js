@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./Home";
 import Subject from "./Subject";
@@ -8,34 +8,12 @@ import Roles from "./Roles";
 import SignIn from "./SignIn";
 import AppWriteUpload from "./AppWriteUpload";
 import LatestUploads from "./LatestUploads";
-import { account } from "./appwrite";
 import { AuthProvider, AuthContext } from "./AuthContext";
 
 export const notesData = createContext();
 
 function App() {
   const [apiState, setApiState] = useState("");
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function checkUser() {
-      try {
-        const currentUser = await account.get();
-        setUser(currentUser);
-      } catch (error) {
-        console.error("User not logged in");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    checkUser();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <AuthProvider>
