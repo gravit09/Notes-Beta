@@ -6,6 +6,7 @@ import Labs from "./Labs";
 import About from "./About";
 import Roles from "./Roles";
 import SignIn from "./SignIn";
+import MyUploads from "./MyUploads";
 import AppWriteUpload from "./AppWriteUpload";
 import LatestUploads from "./LatestUploads";
 import { AuthProvider, AuthContext } from "./AuthContext";
@@ -37,6 +38,22 @@ function App() {
                       <div>Loading...</div>
                     ) : user ? (
                       <AppWriteUpload />
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                </AuthContext.Consumer>
+              }
+            />
+            <Route
+              path="/myuploads"
+              element={
+                <AuthContext.Consumer>
+                  {({ user, loading }) =>
+                    loading ? (
+                      <div>Loading...</div>
+                    ) : user ? (
+                      <MyUploads />
                     ) : (
                       <Navigate to="/login" />
                     )
