@@ -22,6 +22,7 @@ import {
 function LatestUploads() {
   const { setApiState } = useContext(notesData);
   const [notes, setNotes] = useState([]);
+  const [search, setSearch] = useState("");
   const { user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
@@ -57,6 +58,16 @@ function LatestUploads() {
     }
   }
 
+  //for filtering data according to user search
+  const filteredData = search
+    ? notes.filter((note) =>
+        note.Title.toLowerCase().includes(search.toLowerCase())
+      )
+    : notes;
+
+  console.log(filteredData);
+
+  //handle the view option
   async function handleView(fileId) {
     try {
       const response = await storage.getFileView(
@@ -246,10 +257,14 @@ function LatestUploads() {
               <div className="input-group">
                 <input
                   type="text"
+                  value={search}
                   className="form-control bg-light border-0 small"
                   placeholder="Search for..."
                   aria-label="Search"
                   aria-describedby="basic-addon2"
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
                 />
                 <div className="input-group-append">
                   <button className="btn btn-primary" type="button">
@@ -279,7 +294,7 @@ function LatestUploads() {
             )}
           </nav>
           <div className="flex flex-wrap">
-            {notes.map((note) => (
+            {filteredData.map((note) => (
               <div
                 key={note.$id}
                 className="w-full md:w-1/2 lg:w-1/3 p-6 mb-3 m-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
