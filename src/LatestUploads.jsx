@@ -44,7 +44,7 @@ function LatestUploads() {
     fetchTrendingNotes();
   }, []);
 
-  console.log(user);
+  //console.log(user);
 
   async function handleDownload(fileId) {
     try {
@@ -64,8 +64,6 @@ function LatestUploads() {
         note.Title.toLowerCase().includes(search.toLowerCase())
       )
     : notes;
-
-  console.log(filteredData);
 
   //handle the view option
   async function handleView(fileId) {

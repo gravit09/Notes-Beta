@@ -19,50 +19,35 @@ import {
 
 function Subject() {
   const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState("");
+  const [filter, setFilter] = useState("");
   const { apiState, setApiState } = useContext(notesData);
 
-  //console.log(apiState)
-  /* 
   useEffect(() => {
-    localStorage.setItem('apiState', apiState);
-  }, [apiState]);
-
-  useEffect(() => {
-    const storedApiState = localStorage.getItem('apiState');
-    if (storedApiState) {
-      // Set the API state from local storage if it exists
-      setApiState(storedApiState);
-    }
-  }, [setApiState]); */
-
-  useEffect(() => {
-    fetch(
-      `https://script.google.com/macros/s/AKfycbzemxKZ5H5ui3MQS1_D6j95lPGghTm81e3N8Hk1lAoCz7jSBEA4Se5m7AuLNLfJfW_GvA/exec?subject=${apiState}`
-    )
-      .then((res) => res.json())
-      .then((json) => setData(json));
-  }, [apiState]);
-
-  const handleChange = (event) => {
-    event.preventDefault();
-    setFilteredData(event.target.value);
-    console.log(filteredData);
-  };
-  // https://script.google.com/macros/s/AKfycbwVy1I7EB_0qg_3rMjpeOv00520LZIhmJnxtMdqb6T0EKwjL7mDP3Wwv1O271_J827C/exec
-  //second one https://script.google.com/macros/s/AKfycbzemxKZ5H5ui3MQS1_D6j95lPGghTm81e3N8Hk1lAoCz7jSBEA4Se5m7AuLNLfJfW_GvA/exec
-  const searchCards = (cards, filter) => {
-    if (filter === "") {
-      return cards;
-    } else {
-      return cards.filter((card) => {
-        return (
-          card.title.toLowerCase().includes(filter.toLowerCase()) ||
-          card.type.toLowerCase().includes(filter.toLowerCase())
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://script.google.com/macros/s/AKfycbzemxKZ5H5ui3MQS1_D6j95lPGghTm81e3N8Hk1lAoCz7jSBEA4Se5m7AuLNLfJfW_GvA/exec?subject=${apiState}`
         );
-      });
-    }
-  };
+        const result = await response.json();
+        setData(result.data);
+      } catch (err) {
+        console.log("error in trad api", err);
+      }
+    };
+
+    fetchData();
+  }, [apiState]);
+
+  console.log(data);
+
+  const filteredData = filter
+    ? data.filter((note) => {
+        return note.title.toLowerCase().includes(filter.toLowerCase());
+      })
+    : data;
+
+  console.log(filteredData);
+
   // Toggle styling
   const [style, setStyle] = useState(
     "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
@@ -188,6 +173,7 @@ function Subject() {
                   placeholder="Search for..."
                   aria-label="Search"
                   aria-describedby="basic-addon2"
+                  onChange={(e) => setFilter(e.target.value)}
                 />
                 <div className="input-group-append">
                   <button className="btn btn-primary" type="button">
@@ -199,8 +185,8 @@ function Subject() {
           </nav>
           <div className="container-fluid">
             <div id={styles["card-container"]}>
-              {data.data && data.data.length > 0 ? (
-                searchCards(data.data, filteredData).map((item) => (
+              {data && data.length > 0 ? (
+                filteredData.map((item) => (
                   <div className={styles.card} key={item.id}>
                     <h1 className={styles.subject}>{item.subject}</h1>
                     <h2 className={styles.title}>{item.title}</h2>
