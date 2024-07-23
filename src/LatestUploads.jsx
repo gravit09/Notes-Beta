@@ -57,6 +57,19 @@ function LatestUploads() {
     }
   }
 
+  async function handleView(fileId) {
+    try {
+      const response = await storage.getFileView(
+        process.env.REACT_APP_BUCKET_ID,
+        fileId
+      );
+      window.location.href = response.href;
+      console.log(response);
+    } catch (err) {
+      console.log("Error in viewing", err);
+    }
+  }
+
   async function handleUpvote(noteId) {
     if (!user) {
       alert("You must be logged in to upvote");
@@ -107,7 +120,7 @@ function LatestUploads() {
         )
       );
     } catch (error) {
-      console.error("Error upvoting:", error);
+      console.log("Error upvoting:", error);
     }
   }
 
@@ -290,6 +303,25 @@ function LatestUploads() {
                 </p>
                 <a
                   onClick={() => handleDownload(note.Content)}
+                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Download
+                  <svg
+                    className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                    aria-hidden="true"
+                    viewBox="0 0 14 10"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M1 5h12m0 0L9 1m4 4L9 9"
+                    />
+                  </svg>
+                </a>
+                <a
+                  onClick={() => handleView(note.Content)}
                   className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
                   View
