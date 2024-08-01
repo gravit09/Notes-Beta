@@ -15,7 +15,7 @@ function MyUploads() {
           [Query.equal("uploaderId", user.$id)]
         );
         setNotes(response.documents);
-        console.log(response.documents);
+        //console.log(response.documents);
       } catch (error) {
         console.error(error);
         alert("Error fetching usernotes", error);

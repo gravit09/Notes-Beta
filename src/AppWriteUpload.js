@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { storage, databases, ID } from "./appwrite";
+import { storage, databases, ID, account } from "./appwrite";
 import { AuthContext } from "./AuthContext";
 
 function AppWriteUpload() {
@@ -19,6 +19,8 @@ function AppWriteUpload() {
       );
       const uploadedDocId = isUploaded.$id;
 
+      setAuthor(await account.get());
+
       const createDoc = await databases.createDocument(
         process.env.REACT_APP_DATABASE_ID,
         process.env.REACT_APP_COLLECTION_ID,
@@ -27,7 +29,7 @@ function AppWriteUpload() {
           Title: title,
           Subject: subject,
           Content: uploadedDocId,
-          Author: author,
+          Author: author.name,
           UploadDate: new Date().toISOString(),
           uploaderId: user.$id,
         }
@@ -78,18 +80,6 @@ function AppWriteUpload() {
                 type=""
                 placeholder="Enter the title of the file"
                 onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-1 space-y-2">
-              <label className="text-sm font-bold text-gray-500 tracking-wide">
-                Enter your Name
-              </label>
-              <input
-                value={author}
-                className="text-base p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-                type=""
-                placeholder="Enter your name"
-                onChange={(e) => setAuthor(e.target.value)}
               />
             </div>
             <div className="grid grid-cols-1 space-y-2">

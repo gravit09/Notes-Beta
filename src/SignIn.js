@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { account, ID } from "./appwrite";
+import { account, databases, ID, Query } from "./appwrite";
 import { Link } from "react-router-dom";
 import "./About.css";
 import { AuthContext } from "./AuthContext";
@@ -46,13 +46,39 @@ const Login = () => {
     }
   };
 
-  //for registering new user
+  //check wether user already exist or not
+  const checkUsernameExists = async (name) => {
+    try {
+      const response = await databases.listDocuments(
+        process.env.REACT_APP_DATABASE_ID,
+        process.env.REACT_APP_USER_COLLECTION_ID,
+        [Query.equal("UserName", name)]
+      );
+      return response.total > 0;
+    } catch (error) {
+      console.error("Error checking username existence:", error);
+      return false;
+    }
+  };
+
   const register = async (email, password, name) => {
     try {
-      await account.create(ID.unique(), email, password, name);
-      sendOTP(email);
+      const usernameExists = await checkUsernameExists(name);
+
+      if (usernameExists) {
+        alert("Username already exists");
+      } else {
+        const res = await account.create(ID.unique(), email, password, name);
+        sendOTP(email);
+        alert("User registered successfully");
+      }
     } catch (error) {
-      alert("Failed to register. Please try again.");
+      if (error.code === 409) {
+        alert("User already exists");
+      } else {
+        console.error("Error during registration:", error);
+        alert(error);
+      }
     }
   };
 
@@ -189,49 +215,51 @@ const Login = () => {
               </div>
 
               {!signIn && (
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Full Name
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      id="name"
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      autoComplete="name"
-                      required
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
+                <>
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      UserName
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        id="name"
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        autoComplete="name"
+                        required
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      />
+                    </div>
                   </div>
-                </div>
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <label
+                        htmlFor="password"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Password
+                      </label>
+                    </div>
+                    <div className="mt-2">
+                      <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        autoComplete="current-password"
+                        required
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                </>
               )}
 
-              <div>
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Password
-                  </label>
-                </div>
-                <div className="mt-2">
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
-                    required
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
               <p>
                 {signIn
                   ? "Don't have an account yet?"
