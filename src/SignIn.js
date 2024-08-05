@@ -127,8 +127,8 @@ const Login = () => {
             </p>
             <p className="text-sm">
               Due to limitation of resources we can't allow everyone to upload
-              Notes and assignments. To get the admin password, please contact
-              us.
+              Notes and assignments. To Upload Notes You should Authenticate
+              Yourself First.
             </p>
           </div>
         </div>
