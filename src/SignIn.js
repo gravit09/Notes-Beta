@@ -61,14 +61,37 @@ const Login = () => {
     }
   };
 
+  const checkUserExists = async (email) => {
+    try {
+      const response = await databases.listDocuments(
+        process.env.REACT_APP_DATABASE_ID,
+        process.env.REACT_APP_USER_COLLECTION_ID,
+        [Query.equal("email", email)]
+      );
+      return response.total > 0;
+    } catch (error) {
+      console.error("Error checking user existence:", error);
+      return false;
+    }
+  };
+
   const register = async (email, password, name) => {
     try {
       const usernameExists = await checkUsernameExists(name);
-
       if (usernameExists) {
         alert("Username already exists");
       } else {
         const res = await account.create(ID.unique(), email, password, name);
+        const createUser = await databases.createDocument(
+          process.env.REACT_APP_DATABASE_ID,
+          process.env.REACT_APP_USER_COLLECTION_ID,
+          ID.unique(),
+          {
+            UserName: res.name,
+            UserID: res.$id,
+            mail: res.email,
+          }
+        );
         sendOTP(email);
         alert("User registered successfully");
       }
@@ -82,10 +105,16 @@ const Login = () => {
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!validateEmail(email)) {
       alert("Only GLA email addresses are allowed.");
+      return;
+    }
+
+    const userExists = await checkUserExists(email);
+    if (!userExists) {
+      alert("Please register first");
       return;
     }
     sendOTP(email);
@@ -97,6 +126,15 @@ const Login = () => {
       alert("Only GLA email addresses are allowed.");
       return;
     }
+
+    if (name.length == 0) {
+      alert("Username required");
+      return;
+    } else if (name.length < 4) {
+      alert("Username too short!!");
+      return;
+    }
+
     register(email, password, name);
   };
 
