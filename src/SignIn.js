@@ -61,12 +61,13 @@ const Login = () => {
     }
   };
 
+  //to check wether user email already exsists or not
   const checkUserExists = async (email) => {
     try {
       const response = await databases.listDocuments(
         process.env.REACT_APP_DATABASE_ID,
         process.env.REACT_APP_USER_COLLECTION_ID,
-        [Query.equal("email", email)]
+        [Query.equal("mail", email)]
       );
       return response.total > 0;
     } catch (error) {
