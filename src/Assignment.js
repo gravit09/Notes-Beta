@@ -19,7 +19,7 @@ import {
   faListCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
-function LatestUploads() {
+function Assignement() {
   const { setApiState } = useContext(notesData);
   const [notes, setNotes] = useState([]);
   const [search, setSearch] = useState("");
@@ -30,7 +30,7 @@ function LatestUploads() {
       try {
         const response = await databases.listDocuments(
           process.env.REACT_APP_DATABASE_ID,
-          process.env.REACT_APP_COLLECTION_ID,
+          process.env.REACT_APP_USER_AssignmentCollection,
           []
         );
         setNotes(response.documents);
@@ -44,7 +44,7 @@ function LatestUploads() {
     fetchTrendingNotes();
   }, []);
 
-  console.log(user);
+  //console.log(user.targets[0].userId);
 
   async function handleDownload(fileId) {
     try {
@@ -90,7 +90,10 @@ function LatestUploads() {
       const upvoteCheck = await databases.listDocuments(
         process.env.REACT_APP_DATABASE_ID,
         process.env.REACT_APP_UPVOTES_COLLECTION_ID,
-        [Query.equal("userId", user.userId), Query.equal("noteId", noteId)]
+        [
+          Query.equal("userId", user.targets[0].userId),
+          Query.equal("noteId", noteId),
+        ]
       );
 
       if (upvoteCheck.documents.length > 0) {
@@ -104,7 +107,7 @@ function LatestUploads() {
         process.env.REACT_APP_UPVOTES_COLLECTION_ID,
         ID.unique(),
         {
-          userId: user.userId,
+          userId: user.targets[0].userId,
           noteId: noteId,
         }
       );
@@ -115,7 +118,7 @@ function LatestUploads() {
 
       await databases.updateDocument(
         process.env.REACT_APP_DATABASE_ID,
-        process.env.REACT_APP_COLLECTION_ID,
+        process.env.REACT_APP_USER_AssignmentCollection,
         noteId,
         {
           Upvotes: updatedUpvotes,
@@ -368,4 +371,4 @@ function LatestUploads() {
   );
 }
 
-export default LatestUploads;
+export default Assignement;

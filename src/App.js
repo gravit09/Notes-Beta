@@ -10,6 +10,7 @@ import MyUploads from "./MyUploads";
 import AppWriteUpload from "./AppWriteUpload";
 import LatestUploads from "./LatestUploads";
 import { AuthProvider, AuthContext } from "./AuthContext";
+import Assignement from "./Assignment";
 
 export const notesData = createContext();
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="/lab" element={<Labs />} />
             <Route path="/about" element={<About />} />
             <Route path="/soon" element={<LatestUploads />} />
+            <Route path="/assignment" element={<Assignement />} />
             <Route path="/roles" element={<Roles />} />
             <Route path="/login" element={<SignIn />} />
             <Route path="/lg" element={<LatestUploads />} />

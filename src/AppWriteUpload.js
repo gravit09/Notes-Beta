@@ -7,7 +7,15 @@ function AppWriteUpload() {
   const [author, setAuthor] = useState("");
   const [subject, setSubject] = useState("");
   const [file, setFile] = useState(null);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [isNotes, setIsNotes] = useState(false);
   const { user } = useContext(AuthContext);
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setSelectedOption(value);
+    setIsNotes(value === "notes");
+  };
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -21,9 +29,13 @@ function AppWriteUpload() {
 
       setAuthor(await account.get());
 
+      const collectionId = isNotes
+        ? process.env.REACT_APP_COLLECTION_ID
+        : process.env.REACT_APP_USER_AssignmentCollection;
+
       const createDoc = await databases.createDocument(
         process.env.REACT_APP_DATABASE_ID,
-        process.env.REACT_APP_COLLECTION_ID,
+        collectionId,
         ID.unique(),
         {
           Title: title,
@@ -93,6 +105,16 @@ function AppWriteUpload() {
                 placeholder="Enter the subject of the file"
                 onChange={(e) => setSubject(e.target.value)}
               />
+            </div>
+            <div className="grid grid-cols-1 space-y-2">
+              <label className="text-sm font-bold text-gray-500 tracking-wide">
+                Type
+              </label>
+              <select value={selectedOption} onChange={handleChange}>
+                <option value="">Select any Option</option>
+                <option value="notes">Notes</option>
+                <option value="assignment">Assignement</option>
+              </select>
             </div>
             {file != null ? (
               <div className="grid grid-cols-1 space-y-2">
