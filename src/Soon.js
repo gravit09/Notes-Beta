@@ -128,7 +128,7 @@ function Soon() {
             <Link to="/Soon" style={{ textDecoration: "none" }}>
               <a className="nav-link">
                 <FontAwesomeIcon icon={faListCheck} />
-                <span>New Uploads</span>
+                <span>New Notes</span>
               </a>
             </Link>
           </li>
