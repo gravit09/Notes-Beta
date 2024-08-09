@@ -20,6 +20,10 @@ function AppWriteUpload() {
   const handleUpload = async (e) => {
     e.preventDefault();
     try {
+      // Fetch user information (author)
+      const userInfo = await account.get();
+
+      // Upload the file
       const isUploaded = await storage.createFile(
         process.env.REACT_APP_BUCKET_ID,
         ID.unique(),
@@ -27,12 +31,12 @@ function AppWriteUpload() {
       );
       const uploadedDocId = isUploaded.$id;
 
-      setAuthor(await account.get());
-
+      // Determine collection ID based on the type
       const collectionId = isNotes
         ? process.env.REACT_APP_COLLECTION_ID
         : process.env.REACT_APP_USER_AssignmentCollection;
 
+      // Create the document with the fetched author information
       const createDoc = await databases.createDocument(
         process.env.REACT_APP_DATABASE_ID,
         collectionId,
@@ -41,11 +45,12 @@ function AppWriteUpload() {
           Title: title,
           Subject: subject,
           Content: uploadedDocId,
-          Author: author.name,
+          Author: userInfo.name, // Use userInfo.name instead of author.name
           UploadDate: new Date().toISOString(),
           uploaderId: user.$id,
         }
       );
+
       console.log(createDoc);
       alert("Uploaded");
     } catch (err) {

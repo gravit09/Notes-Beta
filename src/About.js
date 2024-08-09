@@ -11,6 +11,8 @@ import {
   faHeart,
   faMagnifyingGlass,
   faBars,
+  faFilePen,
+  faFileLines,
   faArrowsLeftRight,
   faChartLine,
   faListCheck,
@@ -87,10 +89,32 @@ function About() {
             className="nav-item active"
             onClick={() => setApiState("Assignement")}
           >
-            <Link to="/subject" style={{ textDecoration: "none" }}>
+            <Link to="/assignment" style={{ textDecoration: "none" }}>
+              <a className="nav-link">
+                <FontAwesomeIcon icon={faFilePen} />
+                <span>New Assignements</span>
+              </a>
+            </Link>
+          </li>
+          <li
+            className="nav-item active"
+            onClick={() => setApiState("Assignement")}
+          >
+            <Link to="/Soon" style={{ textDecoration: "none" }}>
+              <a className="nav-link">
+                <FontAwesomeIcon icon={faFileLines} />
+                <span>New Notes</span>
+              </a>
+            </Link>
+          </li>
+          <li
+            className="nav-item active"
+            onClick={() => setApiState("Assignement")}
+          >
+            <Link to="/myuploads" style={{ textDecoration: "none" }}>
               <a className="nav-link">
                 <FontAwesomeIcon icon={faListCheck} />
-                <span> New Notes</span>
+                <span>My Uploads</span>
               </a>
             </Link>
           </li>
@@ -163,22 +187,10 @@ function About() {
                       <p class="text-blk name">Gravit</p>
                       <p class="text-blk position">Full-stack Developer</p>
                       <img class="team-member-image" src="./img/gravit.jpeg" />
-                      <a
-                        href="https://twitter.com/gravit01271904"
-                        target="_blank"
-                      >
+                      <a href="https://github.com/gravit09" target="_blank">
                         <img
-                          class="social-media-icon"
-                          src="https://workik-widget-assets.s3.amazonaws.com/widget-assets/images/gray-twitter.svg"
-                        />
-                      </a>
-                      <a
-                        href="https://www.instagram.com/_gravit_7/"
-                        target="_blank"
-                      >
-                        <img
-                          class="social-media-icon"
-                          src="https://workik-widget-assets.s3.amazonaws.com/widget-assets/images/gray-insta.svg"
+                          class="github-icon"
+                          src="https://cdn2.iconfinder.com/data/icons/social-media-iconez/64/GitHub-1024.png"
                         />
                       </a>
                     </div>

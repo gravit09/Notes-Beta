@@ -46,8 +46,6 @@ function Assignement() {
     fetchTrendingNotes();
   }, []);
 
-  //console.log(user.targets[0].userId);
-
   async function handleDownload(fileId) {
     try {
       const response = await storage.getFileDownload(
@@ -87,15 +85,14 @@ function Assignement() {
       return;
     }
 
+    const userId = user.targets?.[0]?.userId || user.userId;
+
     try {
       // Check if user has already upvoted this note
       const upvoteCheck = await databases.listDocuments(
         process.env.REACT_APP_DATABASE_ID,
         process.env.REACT_APP_UPVOTES_COLLECTION_ID,
-        [
-          Query.equal("userId", user.targets[0].userId),
-          Query.equal("noteId", noteId),
-        ]
+        [Query.equal("userId", userId), Query.equal("noteId", noteId)]
       );
 
       if (upvoteCheck.documents.length > 0) {
@@ -109,7 +106,7 @@ function Assignement() {
         process.env.REACT_APP_UPVOTES_COLLECTION_ID,
         ID.unique(),
         {
-          userId: user.targets[0].userId,
+          userId: userId,
           noteId: noteId,
         }
       );

@@ -46,7 +46,7 @@ function LatestUploads() {
     fetchTrendingNotes();
   }, []);
 
-  console.log(user);
+  //console.log(user);
 
   async function handleDownload(fileId) {
     try {
@@ -87,12 +87,14 @@ function LatestUploads() {
       return;
     }
 
+    const userId = user.targets?.[0]?.userId || user.userId;
+
     try {
       // Check if user has already upvoted this note
       const upvoteCheck = await databases.listDocuments(
         process.env.REACT_APP_DATABASE_ID,
         process.env.REACT_APP_UPVOTES_COLLECTION_ID,
-        [Query.equal("userId", user.userId), Query.equal("noteId", noteId)]
+        [Query.equal("userId", userId), Query.equal("noteId", noteId)]
       );
 
       if (upvoteCheck.documents.length > 0) {
@@ -106,7 +108,7 @@ function LatestUploads() {
         process.env.REACT_APP_UPVOTES_COLLECTION_ID,
         ID.unique(),
         {
-          userId: user.userId,
+          userId: userId,
           noteId: noteId,
         }
       );

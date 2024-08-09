@@ -477,3 +477,7 @@ body {
     background-color: #1e40af; /* Darker blue for hover state */
   }
 }
+
+.github-icon {
+  width: 8%;
+}
