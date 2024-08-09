@@ -132,6 +132,17 @@ function Soon() {
               </a>
             </Link>
           </li>
+          <li
+            className="nav-item active"
+            onClick={() => setApiState("Assignement")}
+          >
+            <Link to="/myuploads" style={{ textDecoration: "none" }}>
+              <a className="nav-link">
+                <FontAwesomeIcon icon={faListCheck} />
+                <span>My Uploads</span>
+              </a>
+            </Link>
+          </li>
           <li className="nav-item active" onClick={() => setApiState("PYQ")}>
             <Link to="/subject" style={{ textDecoration: "none" }}>
               <a className="nav-link">

@@ -15,6 +15,8 @@ import {
   faMagnifyingGlass,
   faBars,
   faArrowUp,
+  faFileLines,
+  faFilePen,
   faArrowsLeftRight,
   faListCheck,
 } from "@fortawesome/free-solid-svg-icons";
@@ -208,10 +210,32 @@ function Assignement() {
             className="nav-item active"
             onClick={() => setApiState("Assignement")}
           >
+            <Link to="/assignment" style={{ textDecoration: "none" }}>
+              <a className="nav-link">
+                <FontAwesomeIcon icon={faFilePen} />
+                <span>New Assignements</span>
+              </a>
+            </Link>
+          </li>
+          <li
+            className="nav-item active"
+            onClick={() => setApiState("Assignement")}
+          >
             <Link to="/Soon" style={{ textDecoration: "none" }}>
               <a className="nav-link">
-                <FontAwesomeIcon icon={faListCheck} />
+                <FontAwesomeIcon icon={faFileLines} />
                 <span>New Notes</span>
+              </a>
+            </Link>
+          </li>
+          <li
+            className="nav-item active"
+            onClick={() => setApiState("Assignement")}
+          >
+            <Link to="/myuploads" style={{ textDecoration: "none" }}>
+              <a className="nav-link">
+                <FontAwesomeIcon icon={faListCheck} />
+                <span>My Uploads</span>
               </a>
             </Link>
           </li>
