@@ -11,7 +11,6 @@ const Leaderboard = () => {
         const response = await databases.listDocuments(
           process.env.REACT_APP_DATABASE_ID,
           process.env.REACT_APP_COLLECTION_ID
-          // You might want to add some filtering if needed
         );
 
         console.log(response);
