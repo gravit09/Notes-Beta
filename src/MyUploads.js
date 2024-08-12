@@ -24,6 +24,7 @@ function LatestUploads() {
   const { setApiState } = useContext(notesData);
   const [notes, setNotes] = useState([]);
   const [search, setSearch] = useState("");
+  const [deletingId, setDeletingId] = useState(null); // Track which card is being deleted
   const { user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
@@ -40,19 +41,20 @@ function LatestUploads() {
           [Query.equal("uploaderId", user.$id)]
         );
         const combinedNotes = [...response.documents, ...assignments.documents];
-
         setNotes(combinedNotes);
         console.log(response.documents);
       } catch (error) {
         console.error(error);
-        alert("Error fetching usernotes", error);
+        alert("Error fetching user notes", error);
       }
     }
 
     fetchTrendingNotes();
-  }, []);
+  }, [user]);
 
   async function handleDelete(id, fileId) {
+    setDeletingId(id); // Set the ID of the card being deleted
+
     if (!id) {
       alert("No document ID found");
       return;
@@ -70,24 +72,20 @@ function LatestUploads() {
         id
       );
 
-      if (deleted) {
-        console.log("Document deletion success");
-      }
-
       const fileDel = await storage.deleteFile(
         process.env.REACT_APP_BUCKET_ID,
         fileId
       );
 
-      if (fileDel) {
-        console.log("File deletion success");
-      }
-
       if (deleted && fileDel) {
         alert("Deletion success");
+        // Remove the deleted card from the notes array
+        setNotes((prevNotes) => prevNotes.filter((note) => note.$id !== id));
       }
     } catch (err) {
       console.log("Error during deletion", err);
+    } finally {
+      setDeletingId(null); // Reset the deleting state
     }
   }
 
@@ -178,6 +176,17 @@ function LatestUploads() {
               <a className="nav-link">
                 <FontAwesomeIcon icon={faFileLines} />
                 <span>New Notes</span>
+              </a>
+            </Link>
+          </li>
+          <li
+            className="nav-item active"
+            onClick={() => setApiState("Assignement")}
+          >
+            <Link to="/leaderboard" style={{ textDecoration: "none" }}>
+              <a className="nav-link">
+                <FontAwesomeIcon icon={faFileLines} />
+                <span>Leaderboard</span>
               </a>
             </Link>
           </li>
@@ -279,31 +288,27 @@ function LatestUploads() {
                   key={note.$id}
                   className="w-full md:w-1/2 lg:w-1/3 p-6 mb-3 m-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
                 >
-                  <a href="#">
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                      Title : {note.Title}
-                    </h5>
-                  </a>
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    Title: {note.Title}
+                  </h5>
                   <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    Subject : {note.Subject}
+                    Subject: {note.Subject}
                   </p>
                   <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    Author :{note.Author}
+                    Author: {note.Author}
                   </p>
                   <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    Uploaded at : {note.UploadDate.slice(0, 10)}
+                    Uploaded at: {note.UploadDate.slice(0, 10)}
                   </p>
                   <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    Total Upvotes : {note.Upvotes}
+                    Total Upvotes: {note.Upvotes}
                   </p>
-                  <a
-                    onClick={() => {
-                      console.log(note.Content);
-                      handleDelete(note.$id, note.Content);
-                    }}
+                  <button
+                    onClick={() => handleDelete(note.$id, note.Content)}
                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    disabled={deletingId === note.$id} // Disable button while deleting
                   >
-                    Delete
+                    {deletingId === note.$id ? "Deleting..." : "Delete"}
                     <svg
                       className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
                       aria-hidden="true"
@@ -317,7 +322,7 @@ function LatestUploads() {
                         d="M1 5h12m0 0L9 1m4 4L9 9"
                       />
                     </svg>
-                  </a>
+                  </button>
                 </div>
               ))}
             </div>

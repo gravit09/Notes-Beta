@@ -231,6 +231,17 @@ function LatestUploads() {
             className="nav-item active"
             onClick={() => setApiState("Assignement")}
           >
+            <Link to="/leaderboard" style={{ textDecoration: "none" }}>
+              <a className="nav-link">
+                <FontAwesomeIcon icon={faFileLines} />
+                <span>Leaderboard</span>
+              </a>
+            </Link>
+          </li>
+          <li
+            className="nav-item active"
+            onClick={() => setApiState("Assignement")}
+          >
             <Link to="/myuploads" style={{ textDecoration: "none" }}>
               <a className="nav-link">
                 <FontAwesomeIcon icon={faListCheck} />
