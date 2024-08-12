@@ -193,26 +193,33 @@ const Login = () => {
           </button>
         </form>
       ) : loggedInUser ? (
-        <div className="user-info-container">
-          <h3>UserName: {loggedInUser.name}</h3>
-          <h3>Email: {loggedInUser.email}</h3>
-          <div className="inline-flex items-center ml-4 px-3 py-2 font-medium text-center bg-blue-700 rounded-lg">
-            <a
-              onClick={async () => {
-                await account.deleteSession("current");
-                setLoggedInUser(null);
-                setUser(null);
-                setOtpSent(false);
-              }}
-              className="logout-button"
-            >
-              Logout
-            </a>
-          </div>
-          <div className="inline-flex items-center ml-4 px-3 py-2 font-medium text-center bg-blue-700 rounded-lg">
-            <Link to="/" className="logout-button ">
-              Home
-            </Link>
+        <div className="user-info-container bg-gray-100 p-6 rounded-lg shadow-lg max-w-sm mx-auto">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">
+            UserName: {loggedInUser.name}
+          </h3>
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">
+            Email: {loggedInUser.email}
+          </h3>
+
+          <div className="space-y-4">
+            <div className="inline-flex items-center w-full justify-center px-4 py-2 font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+              <a
+                onClick={async () => {
+                  await account.deleteSession("current");
+                  setLoggedInUser(null);
+                  setUser(null);
+                  setOtpSent(false);
+                }}
+                className="logout-button w-full text-center"
+              >
+                Logout
+              </a>
+            </div>
+            <div className="inline-flex items-center w-full justify-center px-4 py-2 font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+              <Link to="/" className="logout-button w-full text-center">
+                Home
+              </Link>
+            </div>
           </div>
         </div>
       ) : (
