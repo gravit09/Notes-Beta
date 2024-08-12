@@ -94,7 +94,7 @@ function Subject() {
           <Link to="/" style={{ textDecoration: "none" }}>
             <a className="nav-link">
               <FontAwesomeIcon icon={faHouse} />
-              <span>GLA 1st year Dashboard</span>
+              <span>1st year Dashboard</span>
             </a>
           </Link>
         </li>
