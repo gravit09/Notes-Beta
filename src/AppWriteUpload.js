@@ -31,7 +31,7 @@ function AppWriteUpload() {
       );
       const uploadedDocId = isUploaded.$id;
 
-      // Determine collection ID based on the type
+      // Determining collection ID based on the type
       const collectionId = isNotes
         ? process.env.REACT_APP_COLLECTION_ID
         : process.env.REACT_APP_USER_AssignmentCollection;
@@ -45,7 +45,7 @@ function AppWriteUpload() {
           Title: title,
           Subject: subject,
           Content: uploadedDocId,
-          Author: userInfo.name, // Use userInfo.name instead of author.name
+          Author: userInfo.name,
           UploadDate: new Date().toISOString(),
           uploaderId: user.$id,
         }
