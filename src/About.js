@@ -8,13 +8,11 @@ import {
   faFlaskVial,
   faFileInvoice,
   faAddressCard,
-  faHeart,
   faMagnifyingGlass,
   faBars,
   faFilePen,
   faFileLines,
   faArrowsLeftRight,
-  faChartLine,
   faListCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -178,9 +176,12 @@ function About() {
               <div class="responsive-container-block outer-container">
                 <div class="responsive-container-block inner-container">
                   <p class="text-blk heading-text">Our Team</p>
-                  <p class="text-blk sub-heading-text">
+                  <p class="text-blk text-2xl">
                     We are a team of computer science students passionate about
-                    web development.
+                    web development & app development if you have any doubt
+                    regarding coding or want to Contribute to this project feel
+                    free to contact us & any feedback related to website will be
+                    appreciated.
                   </p>
                   <div class="responsive-container-block cards-container">
                     <div class="responsive-cell-block wk-desk-4 wk-ipadp-4 wk-mobile-12 wk-tab-12 card-container">

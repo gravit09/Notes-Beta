@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { storage, databases, ID, account } from "./appwrite";
+import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 
 function AppWriteUpload() {
@@ -81,6 +82,14 @@ function AppWriteUpload() {
       >
         <div className="absolute bg-black opacity-60 inset-0 z-0" />
         <div className="sm:max-w-lg w-full p-10 bg-white rounded-xl z-10">
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <a className="sidebar-brand d-flex align-items-center justify-content-center">
+              <div className="sidebar-brand-icon">
+                <img src="./img/netflix (1).png" />
+              </div>
+              <div className="sidebar-brand-text mx-3 main-title">notesj</div>
+            </a>
+          </Link>
           <div className="text-center">
             <h2 className="mt-5 text-3xl font-bold text-gray-900">
               File Upload!

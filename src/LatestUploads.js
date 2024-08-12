@@ -328,76 +328,62 @@ function LatestUploads() {
               </div>
             )}
           </nav>
-          <div className="flex flex-wrap">
-            {filteredData.map((note) => (
-              <div
-                key={note.$id}
-                className="w-full md:w-1/2 lg:w-1/3 p-6 mb-3 m-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-              >
-                <a href="#">
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    Title : {note.Title}
-                  </h5>
-                </a>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  Subject : {note.Subject}
-                </p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  Author :{note.Author}
-                </p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  Uploaded at : {note.UploadDate.slice(0, 10)}
-                </p>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  Total Upvotes : {note.Upvotes}
-                </p>
-                <a
-                  onClick={() => handleDownload(note.Content)}
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Download
-                  <svg
-                    className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                    aria-hidden="true"
-                    viewBox="0 0 14 10"
+          <div className="container-fluid">
+            <div className="row">
+              {filteredData.map((note) => {
+                const uploadDate = new Date(note.$createdAt);
+                const currentDate = new Date();
+                const timeDiff = currentDate - uploadDate;
+                const dayDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+
+                return (
+                  <div
+                    className="col-lg-4 col-md-6 col-sm-12 mb-4"
+                    key={note.$id}
                   >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M1 5h12m0 0L9 1m4 4L9 9"
-                    />
-                  </svg>
-                </a>
-                <a
-                  onClick={() => handleView(note.Content)}
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  View
-                  <svg
-                    className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                    aria-hidden="true"
-                    viewBox="0 0 14 10"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M1 5h12m0 0L9 1m4 4L9 9"
-                    />
-                  </svg>
-                </a>
-                <a
-                  onClick={() => handleUpvote(note.$id)}
-                  className="inline-flex items-center ml-4 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Upvote
-                  <FontAwesomeIcon className="ml-2" icon={faArrowUp} />
-                </a>
-              </div>
-            ))}
+                    <div className="card shadow mb-4">
+                      {dayDiff <= 3 && (
+                        <button className="absolute py-1 px-2 -left-2 -top-2 -rotate-[10deg] border border-black bg-[#7e22ce] text-white font-bold">
+                          New!
+                        </button>
+                      )}
+                      <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 className="m-0 font-weight-bold text-primary">
+                          {note.Title}
+                        </h6>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleUpvote(note.$id)}
+                        >
+                          <FontAwesomeIcon icon={faArrowUp} /> {note.Upvotes}
+                        </button>
+                      </div>
+                      <div className="card-body">
+                        <div className="mb-2">
+                          <button
+                            className="btn btn-success mr-2"
+                            onClick={() => handleView(note.$id)}
+                          >
+                            View
+                          </button>
+                          <button
+                            className="btn btn-info"
+                            onClick={() => handleDownload(note.fileId)}
+                          >
+                            Download
+                          </button>
+                        </div>
+                        <p>Subject : {note.Subject}</p>
+                        <p className="text-muted">Uploaded by: {note.Author}</p>
+                        <p className="text-muted">
+                          Uploaded on: {uploadDate.toDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

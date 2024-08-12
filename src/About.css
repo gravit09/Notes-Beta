@@ -481,3 +481,30 @@ body {
 .github-icon {
   width: 8%;
 }
+
+.navbar-nav {
+  position: relative;
+  height: 100%; /* this Make sure the sidebar takes the full height */
+  overflow-y: auto; /* Allow the sidebar to scroll */
+  width: 35%;
+}
+
+/* Ensure the main wrapper can scroll */
+#wrapper {
+  display: flex;
+  height: 100vh; /* Ensure the wrapper takes the full viewport height */
+  overflow: hidden; /* Hide overflow to allow proper scrolling */
+}
+
+/* Ensure the content area can scroll */
+#content-wrapper {
+  flex-grow: 1;
+  overflow-y: auto; /* Allow the content area to scroll */
+}
+
+/* for the topbar needs to be sticky at the top */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}

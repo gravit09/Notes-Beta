@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { databases } from "./appwrite";
+import { Link } from "react-router-dom";
 
 const LeaderBoard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
@@ -48,7 +49,17 @@ const LeaderBoard = () => {
 
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6 text-center">Leaderboard</h1>
+      <Link to="/" style={{ textDecoration: "none" }}>
+        <a className="sidebar-brand d-flex align-items-center mb-3 text-2xl justify-content-center">
+          <div className="sidebar-brand-icon">
+            <img src="./img/netflix (1).png" />
+          </div>
+          <div className="sidebar-brand-text mx-3 main-title">notesj</div>
+        </a>
+      </Link>
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        Upload Leaderboard
+      </h1>
       <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
         <thead>
           <tr>
