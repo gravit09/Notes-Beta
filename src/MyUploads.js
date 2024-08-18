@@ -232,54 +232,59 @@ function LatestUploads() {
           </div>
         </ul>
         <div id="content-wrapper" className="d-flex flex-column">
-          <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-            <button
-              id="sidebarToggleTop"
-              className="btn btn-link d-md-none rounded-circle mr-3"
-              onClick={hamChange}
-            >
-              <FontAwesomeIcon icon={faBars} />
-            </button>
-            <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-              <div className="input-group">
-                <input
-                  type="text"
-                  value={search}
-                  className="form-control bg-light border-0 small"
-                  placeholder="Search for..."
-                  aria-label="Search"
-                  aria-describedby="basic-addon2"
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                  }}
-                />
-                <div className="input-group-append">
-                  <button className="btn btn-primary" type="button">
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                  </button>
+          <nav className="navbar flex items-center justify-between navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+            <div className="flex items-center">
+              <button
+                id="sidebarToggleTop"
+                className="btn btn-link d-md-none rounded-circle mr-3"
+                onClick={hamChange}
+              >
+                <FontAwesomeIcon icon={faBars} />
+              </button>
+              <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                <div className="input-group">
+                  <input
+                    type="text"
+                    value={search}
+                    className="form-control bg-light border-0 small"
+                    placeholder="Search for..."
+                    aria-label="Search"
+                    aria-describedby="basic-addon2"
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                  />
+                  <div className="input-group-append">
+                    <button className="btn btn-primary" type="button">
+                      <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </form>
-            {!user ? (
-              <div className="inline-flex items-center ml-4 px-3 py-2 font-medium text-center  bg-blue-700 rounded-lg">
-                <Link to="/login" className="logout-button">
-                  Login
-                </Link>
-              </div>
-            ) : (
-              <div className="inline-flex items-center ml-4 px-3 py-2 font-medium text-center  bg-blue-700 rounded-lg">
-                <a
-                  onClick={async () => {
-                    await account.deleteSession("current");
-                    setUser(null);
-                  }}
-                  className="logout-button"
-                >
-                  Logout
-                </a>
-              </div>
-            )}
+              </form>
+            </div>
+            <div className="ml-auto">
+              {!user ? (
+                <div className="inline-flex px-3 py-2 font-medium text-center bg-blue-700 rounded-lg">
+                  <Link to="/login" className="logout-button">
+                    Login
+                  </Link>
+                </div>
+              ) : (
+                <div className="inline-flex items-center px-3 py-2 font-medium text-center bg-blue-700 rounded-lg">
+                  <a
+                    onClick={async () => {
+                      await account.deleteSession("current");
+                      setUser(null);
+                    }}
+                    className="logout-button"
+                  >
+                    Logout
+                  </a>
+                </div>
+              )}
+            </div>
           </nav>
+
           <div>
             {notes.length === 0 && <h2>No Uploads Yet</h2>}
             <div className="container-fluid">

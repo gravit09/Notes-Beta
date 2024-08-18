@@ -362,13 +362,13 @@ function LatestUploads() {
                         <div className="mb-2">
                           <button
                             className="btn btn-success mr-2"
-                            onClick={() => handleView(note.$id)}
+                            onClick={() => handleView(note.Content)}
                           >
                             View
                           </button>
                           <button
                             className="btn btn-info"
-                            onClick={() => handleDownload(note.fileId)}
+                            onClick={() => handleDownload(note.Content)}
                           >
                             Download
                           </button>
