@@ -17,7 +17,7 @@ import {
   faArrowUp,
   faFileLines,
   faFilePen,
-  faArrowsLeftRight,
+  faCode,
   faListCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -183,6 +183,17 @@ function Assignement() {
               <a className="nav-link">
                 <FontAwesomeIcon icon={faHouse} />
                 <span>1st year Dashboard</span>
+              </a>
+            </Link>
+          </li>
+          <li
+            className="nav-item active"
+            onClick={() => setApiState("Assignement")}
+          >
+            <Link to="/code" style={{ textDecoration: "none" }}>
+              <a className="nav-link">
+                <FontAwesomeIcon icon={faCode} />
+                <span>Code Resources</span>
               </a>
             </Link>
           </li>

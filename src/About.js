@@ -10,6 +10,7 @@ import {
   faAddressCard,
   faMagnifyingGlass,
   faBars,
+  faCode,
   faFilePen,
   faFileLines,
   faArrowsLeftRight,
@@ -63,6 +64,17 @@ function About() {
               <a className="nav-link">
                 <FontAwesomeIcon icon={faHouse} />
                 <span>1st year Dashboard</span>
+              </a>
+            </Link>
+          </li>
+          <li
+            className="nav-item active"
+            onClick={() => setApiState("Assignement")}
+          >
+            <Link to="/code" style={{ textDecoration: "none" }}>
+              <a className="nav-link">
+                <FontAwesomeIcon icon={faCode} />
+                <span>Code Resources</span>
               </a>
             </Link>
           </li>

@@ -13,6 +13,7 @@ import {
   faArrowsLeftRight,
   faFileLines,
   faFilePen,
+  faCode,
   faChartLine,
   faListCheck,
 } from "@fortawesome/free-solid-svg-icons";
@@ -67,6 +68,17 @@ function Labs() {
               </a>
             </Link>
           </li>
+          <li
+            className="nav-item active"
+            onClick={() => setApiState("Assignement")}
+          >
+            <Link to="/code" style={{ textDecoration: "none" }}>
+              <a className="nav-link">
+                <FontAwesomeIcon icon={faCode} />
+                <span>Code Resources</span>
+              </a>
+            </Link>
+          </li>
           <li className="nav-item active" onClick={() => setApiState("PYQ")}>
             <Link to="/upload" style={{ textDecoration: "none" }}>
               <a className="nav-link">
@@ -75,7 +87,6 @@ function Labs() {
               </a>
             </Link>
           </li>
-
           <li className="nav-item active">
             <a className="nav-link">
               <FontAwesomeIcon icon={faFlaskVial} />
@@ -104,6 +115,7 @@ function Labs() {
               </a>
             </Link>
           </li>
+
           <li
             className="nav-item active"
             onClick={() => setApiState("Assignement")}

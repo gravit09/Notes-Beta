@@ -12,6 +12,7 @@ import LatestUploads from "./LatestUploads";
 import { AuthProvider, AuthContext } from "./AuthContext";
 import Assignement from "./Assignment";
 import LeaderBoard from "./LeaderBoard";
+import CodeGuide from "./CodeGuide";
 
 export const notesData = createContext();
 
@@ -33,6 +34,7 @@ function App() {
             <Route path="/login" element={<SignIn />} />
             <Route path="/lg" element={<LatestUploads />} />
             <Route path="/leaderboard" element={<LeaderBoard />} />
+            <Route path="/code" element={<CodeGuide />} />
             <Route
               path="/upload"
               element={
