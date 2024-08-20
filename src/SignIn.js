@@ -9,11 +9,21 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
   const [signIn, setSignIn] = useState(true);
   const [otp, setOTP] = useState("");
   const { setUser } = useContext(AuthContext);
   const [otpSent, setOtpSent] = useState(false);
   const [sessionToken, setSessionToken] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const showError = (message) => {
+    setErrorMessage(message);
+  };
+
+  const clearError = () => {
+    setErrorMessage("");
+  };
 
   //for the validation of email
   const validateEmail = (email) => {
@@ -27,7 +37,7 @@ const Login = () => {
       setSessionToken(token);
       setOtpSent(true);
     } catch (error) {
-      alert("Failed to send OTP. Please check your Email");
+      showError("Failed to send OTP. Please check your Email");
     }
   };
 
@@ -35,14 +45,14 @@ const Login = () => {
   const verifyOTP = async (email, otp) => {
     try {
       if (!sessionToken) {
-        alert("Session token is missing. Please request OTP again.");
+        showError("Session token is missing. Please request OTP again.");
         return;
       }
       const session = await account.createSession(sessionToken.userId, otp);
       setLoggedInUser(await account.get());
       setUser(session);
     } catch (error) {
-      alert("Failed to login. Please check your Email");
+      showError("Failed to login. Please check your Email");
     }
   };
 
@@ -78,38 +88,44 @@ const Login = () => {
 
   const register = async (email, password, name) => {
     try {
+      setIsRegistering(true);
+
       const usernameExists = await checkUsernameExists(name);
       if (usernameExists) {
-        alert("Username already exists");
-      } else {
-        const res = await account.create(ID.unique(), email, password, name);
-        const createUser = await databases.createDocument(
-          process.env.REACT_APP_DATABASE_ID,
-          process.env.REACT_APP_USER_COLLECTION_ID,
-          ID.unique(),
-          {
-            UserName: res.name,
-            UserID: res.$id,
-            mail: res.email,
-          }
-        );
-        sendOTP(email);
-        alert("User registered successfully");
+        showError("Username already exists.");
+        setIsRegistering(false);
+        return;
       }
+
+      const res = await account.create(ID.unique(), email, password, name);
+      await databases.createDocument(
+        process.env.REACT_APP_DATABASE_ID,
+        process.env.REACT_APP_USER_COLLECTION_ID,
+        ID.unique(),
+        {
+          UserName: res.name,
+          UserID: res.$id,
+          mail: res.email,
+        }
+      );
+      sendOTP(email);
+      alert("User registered successfully");
     } catch (error) {
       if (error.code === 409) {
-        alert("User already exists");
+        showError("User already exists,Try signIn");
       } else {
         console.error("Error during registration:", error);
-        alert(error);
+        showError(error.message);
       }
+    } finally {
+      setIsRegistering(false);
     }
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!validateEmail(email)) {
-      alert("Only GLA email addresses are allowed.");
+      showError("Only GLA email addresses are allowed.");
       return;
     }
 
@@ -124,7 +140,7 @@ const Login = () => {
   const handleRegister = (e) => {
     e.preventDefault();
     if (!validateEmail(email)) {
-      alert("Only GLA email addresses are allowed.");
+      showError("Only GLA email addresses are allowed.");
       return;
     }
 
@@ -144,8 +160,41 @@ const Login = () => {
     verifyOTP(email, otp);
   };
 
+  const ErrorBanner = ({ message, onClose }) => {
+    return (
+      <div
+        className="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md my-4"
+        role="alert"
+      >
+        <div className="flex">
+          <div className="py-1">
+            <svg
+              className="fill-current h-6 w-6 text-red-500 mr-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M8.12 14.71L12.17 10.66 8.12 6.61l-1.41 1.41 2.83 2.83-2.83 2.83zM12.29 14.71l2.83-2.83-2.83-2.83-1.41 1.41 2.83 2.83-2.83 2.83zM10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18.4c-4.63 0-8.4-3.77-8.4-8.4S5.37 1.6 10 1.6s8.4 3.77 8.4 8.4-3.77 8.4-8.4 8.4z" />
+            </svg>
+          </div>
+          <div>
+            <p className="font-bold">Error</p>
+            <p className="text-sm">{message}</p>
+          </div>
+          <div className="ml-auto">
+            <button onClick={onClose} className="text-red-500">
+              &#x2716;
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div>
+      {errorMessage && (
+        <ErrorBanner message={errorMessage} onClose={clearError} />
+      )}
       <div
         className="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
         role="alert"
@@ -232,113 +281,127 @@ const Login = () => {
                 alt="NoteFlix"
               />
               <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                Sign in to Upload Dashboard
+                Sign in to your account
               </h2>
             </Link>
           </div>
-
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
             <form className="space-y-6">
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Email address
-                </label>
+                <div className="flex justify-between">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Email address
+                  </label>
+                </div>
                 <div className="mt-2">
                   <input
                     id="email"
                     name="email"
                     type="email"
+                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="email"
-                    required
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
-
               {!signIn && (
-                <>
-                  <div>
+                <div>
+                  <div className="flex justify-between">
                     <label
-                      htmlFor="name"
+                      htmlFor="email"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      UserName
+                      Username
                     </label>
-                    <div className="mt-2">
-                      <input
-                        id="name"
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        autoComplete="name"
-                        required
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
                   </div>
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <label
-                        htmlFor="password"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Password
-                      </label>
-                    </div>
-                    <div className="mt-2">
-                      <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        autoComplete="current-password"
-                        required
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
+                  <div className="mt-2">
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
                   </div>
-                </>
+                </div>
               )}
-
-              <p>
-                {signIn
-                  ? "Don't have an account yet?"
-                  : "Already have an account?"}
-                <span
-                  onClick={() => {
-                    setSignIn(!signIn);
-                  }}
-                  className="text-black cursor-pointer"
-                >
-                  {signIn ? " Register" : " Sign In"}
-                </span>{" "}
-              </p>
-              {signIn && (
+              {!signIn && (
+                <div>
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Password
+                    </label>
+                  </div>
+                  <div className="mt-2">
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+              )}
+              {signIn ? (
                 <div>
                   <button
-                    type="button"
+                    type="submit"
                     onClick={handleLogin}
                     className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     Sign in
                   </button>
+                  <p className="mt-10 text-center text-sm text-gray-500">
+                    Not a member?{" "}
+                    <a
+                      href="#"
+                      className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                      onClick={() => {
+                        setSignIn(false);
+                      }}
+                    >
+                      Register
+                    </a>
+                  </p>
                 </div>
-              )}
-              {!signIn && (
+              ) : (
                 <div>
                   <button
-                    type="button"
+                    type="submit"
                     onClick={handleRegister}
-                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className={`flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm ${
+                      isRegistering
+                        ? "bg-gray-500 cursor-not-allowed"
+                        : "bg-indigo-600 hover:bg-indigo-500"
+                    } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                    disabled={isRegistering}
                   >
-                    Register
+                    {isRegistering ? "Registering..." : "Register"}
                   </button>
+                  <p className="mt-10 text-center text-sm text-gray-500">
+                    Already Registered?{" "}
+                    <a
+                      href="#"
+                      className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                      onClick={() => {
+                        setSignIn(true);
+                      }}
+                    >
+                      Sign In
+                    </a>
+                  </p>
                 </div>
               )}
             </form>
