@@ -320,25 +320,27 @@ function LatestUploads() {
                 </div>
               </div>
             </form>
-            {!user ? (
-              <div className="inline-flex items-center ml-4 px-3 py-2 font-medium text-center  bg-blue-700 rounded-lg">
-                <Link to="/login" className="logout-button">
-                  Login
-                </Link>
-              </div>
-            ) : (
-              <div className="inline-flex items-center ml-4 px-3 py-2 font-medium text-center  bg-blue-700 rounded-lg">
-                <a
-                  onClick={async () => {
-                    await account.deleteSession("current");
-                    setUser(null);
-                  }}
-                  className="logout-button"
-                >
-                  Logout
-                </a>
-              </div>
-            )}
+            <div className="ml-auto">
+              {!user ? (
+                <div className="inline-flex px-3 py-2 font-medium text-center bg-blue-700 rounded-lg">
+                  <Link to="/login" className="logout-button">
+                    Login
+                  </Link>
+                </div>
+              ) : (
+                <div className="inline-flex items-center px-3 py-2 font-medium text-center bg-blue-700 rounded-lg">
+                  <a
+                    onClick={async () => {
+                      await account.deleteSession("current");
+                      setUser(null);
+                    }}
+                    className="logout-button"
+                  >
+                    Logout
+                  </a>
+                </div>
+              )}
+            </div>
           </nav>
           <div className="container-fluid">
             <div className="row">
